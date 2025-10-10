@@ -84,7 +84,7 @@ export const makeMinimalClient = (
 	if (supportedChains.includes(viemClient.chain.name)) {
 		baseAddresses =
 			defaultContractAddresses[
-				viemClient.chain.name as keyof typeof defaultContractAddresses
+			viemClient.chain.name as keyof typeof defaultContractAddresses
 			];
 	}
 
@@ -527,3 +527,8 @@ export * from "./clients/logicalArbiters";
 
 // Deprecated - use specific clients above instead
 export * from "./clients/arbiters";
+
+
+// Test utilities for consumers
+export * from "../tests/utils/setup";
+export * from "../tests/utils/tokenTestUtils";
