@@ -221,32 +221,28 @@ export const makeTokenBundleClient = (viemClient: ViemClient, addresses: ChainAd
        * );
        * ```
        */
-      buyBundleForBundle: async (bid: TokenBundle, ask: TokenBundle, expiration: bigint) => {
-        const hash = await viemClient.writeContract({
-          address: addresses.tokenBundleBarterUtils,
-          abi: tokenBundleBarterUtilsAbi.abi,
-          functionName: "buyBundleForBundle",
-          args: [
-            {
-              ...flattenTokenBundle(bid),
-              arbiter: addresses.tokenBundlePaymentObligation,
-              demand: encodePaymentObligationRaw({
-                ...flattenTokenBundle(ask),
-                payee: viemClient.account.address, // Alice receives the ask bundle
-              }),
-              nativeAmount: 0n,
-            },
-            { 
-              ...flattenTokenBundle(ask), 
-              payee: "0x0000000000000000000000000000000000000000", // Zero address - fulfilled by contract logic
-              nativeAmount: 0n 
-            },
-            expiration,
-          ],
-        });
-        const attested = await getAttestedEventFromTxHash(viemClient, hash);
-        return { hash, attested };
+    buyBundleForBundle: async (bid: TokenBundle, ask: TokenBundle, expiration: bigint) => {
+      const hash = await viemClient.writeContract({
+        address: addresses.tokenBundleBarterUtils,
+        abi: tokenBundleBarterUtilsAbi.abi,
+        functionName: "buyBundleForBundle",
+        args: [
+      {
+        ...flattenTokenBundle(bid),
+        arbiter: addresses.tokenBundlePaymentObligation,
+        demand: encodePaymentObligationRaw({
+          ...flattenTokenBundle(ask),
+          payee: viemClient.account.address,
+        }),
+        nativeAmount: 0n,
       },
+          { ...flattenTokenBundle(ask), payee: viemClient.account.address, nativeAmount: 0n, },
+          expiration,
+        ],
+      });
+      const attested = await getAttestedEventFromTxHash(viemClient, hash);
+      return { hash, attested };
+    },
 
     /**
      * Fulfills a bundle-bundle trade
